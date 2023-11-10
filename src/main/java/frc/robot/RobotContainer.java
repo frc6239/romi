@@ -11,6 +11,7 @@ import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.AutonomousDistance;
 import frc.robot.commands.AutonomousTime;
 import frc.robot.commands.LEDWithGyro;
+import frc.robot.commands.TurnDegrees;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.OnBoardIO;
 import frc.robot.subsystems.OnBoardIO.ChannelMode;
@@ -66,9 +67,14 @@ public class RobotContainer {
     m_drivetrain.setDefaultCommand(getArcadeDriveCommand());
 
     // Example of how to use the onboard IO
+    Trigger onboardButtonB = new Trigger(m_onboardIO::getButtonBPressed);
+    onboardButtonB
+        .onTrue(new LEDWithGyro(m_drivetrain, m_onboardIO))
+        .onFalse(new PrintCommand("Button B Released"));
+    
     Trigger onboardButtonA = new Trigger(m_onboardIO::getButtonAPressed);
     onboardButtonA
-        .onTrue(new LEDWithGyro(m_drivetrain, m_onboardIO))
+        .onTrue(new TurnDegrees(0.5, 90.0, m_drivetrain))
         .onFalse(new PrintCommand("Button A Released"));
 
     // Setup SmartDashboard options
